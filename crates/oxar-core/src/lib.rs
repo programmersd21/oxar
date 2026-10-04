@@ -7,9 +7,11 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![warn(missing_docs)]
 
+pub mod budget;
 pub mod error;
 pub mod policy;
 
+pub use budget::{Budget, EntryScope};
 pub use error::{Error, Location, Result};
 pub use policy::{
     Duplicates, Limits, LinkPolicy, ModePolicy, Overwrite, Policy, SpecialFilesPolicy, WindowsNames,
