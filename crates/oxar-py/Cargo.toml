@@ -1,0 +1,20 @@
+[package]
+name = "oxar-py"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+publish = false
+description = "PyO3 bindings for oxar (internal crate)"
+
+[lib]
+name = "_oxar"
+crate-type = ["cdylib"]
+
+[dependencies]
+oxar-core = { path = "../oxar-core", version = "=0.1.0" }
+pyo3 = { workspace = true, features = ["extension-module"] }
+
+[lints]
+workspace = true

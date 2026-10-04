@@ -1,0 +1,6 @@
+[env]
+CFLAGS_x86_64-unknown-linux-gnu = { value = "-DHAVE_USABLE_CLMUL", force = false }
+CFLAGS_x86_64-unknown-linux-musl = { value = "-DHAVE_USABLE_CLMUL", force = false }
+CFLAGS_x86_64-apple-darwin = { value = "-DHAVE_USABLE_CLMUL", force = false }
+CFLAGS_x86_64-pc-windows-msvc = { value = "/DHAVE_USABLE_CLMUL", force = false }
+CFLAGS_x86_64-pc-windows-gnu = { value = "-DHAVE_USABLE_CLMUL", force = false }

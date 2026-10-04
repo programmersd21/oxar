@@ -1,0 +1,39 @@
+[package]
+name = "oxar-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Archive and compression core for oxar: detection, safe extraction, streaming, one API for zip, tar and 7z"
+
+[dependencies]
+thiserror.workspace = true
+rayon.workspace = true
+crc32fast.workspace = true
+cap-std.workspace = true
+cap-primitives.workspace = true
+zip.workspace = true
+tar.workspace = true
+sevenz-rust2.workspace = true
+lzma-rust2.workspace = true
+flate2.workspace = true
+bzip2.workspace = true
+liblzma.workspace = true
+zstd.workspace = true
+lz4_flex.workspace = true
+brotli.workspace = true
+snap.workspace = true
+zeroize.workspace = true
+unicode-normalization.workspace = true
+caseless.workspace = true
+bitflags.workspace = true
+
+[dev-dependencies]
+proptest.workspace = true
+criterion.workspace = true
+tempfile.workspace = true
+
+[lints]
+workspace = true

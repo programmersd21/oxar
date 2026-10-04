@@ -1,0 +1,62 @@
+[workspace]
+resolver = "3"
+members = ["crates/oxar-core", "crates/oxar-py"]
+default-members = ["crates/oxar-core"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.98"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/programmersd21/oxar"
+homepage = "https://github.com/programmersd21/oxar"
+authors = ["Soumalya Das"]
+keywords = ["archive", "compression", "zip", "tar", "7z"]
+categories = ["compression", "filesystem"]
+
+[workspace.dependencies]
+thiserror = "2.0.21"
+rayon = "1.12.0"
+crc32fast = "1.5.2"
+cap-std = "4.0.3"
+cap-primitives = "4.0.3"
+zip = { version = "9.0.5", default-features = false, features = ["aes-crypto", "bzip2", "deflate-flate2-zlib-rs", "deflate64", "lzma", "zstd"] }
+tar = { version = "0.4.46", default-features = false }
+sevenz-rust2 = { version = "0.24.1", features = ["deflate", "zstd"] }
+lzma-rust2 = "0.23.0"
+flate2 = { version = "1.1.10", default-features = false, features = ["zlib-rs"] }
+bzip2 = "0.6.1"
+liblzma = { version = "0.4.8", default-features = false, features = ["static", "parallel"] }
+zstd = { version = "0.14.3", features = ["zstdmt"] }
+lz4_flex = "0.14.0"
+brotli = { version = "9.0.0", features = ["disallow_large_window_size"] }
+snap = "1.1.2"
+zeroize = "1.9.1"
+unicode-normalization = "0.1.26"
+caseless = "0.2.2"
+bitflags = "2.13.2"
+
+# dev
+proptest = "1.12.0"
+criterion = "0.8.2"
+tempfile = "3.27.0"
+
+# bindings
+pyo3 = "0.30.1"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+opt-level = 3
+debug = "line-tables-only"
+strip = false
+panic = "unwind"
+
+[profile.bench]
+inherits = "release"
