@@ -10,9 +10,11 @@
 pub mod budget;
 pub mod error;
 pub mod policy;
+pub mod secret;
 
 pub use budget::{Budget, EntryScope};
 pub use error::{Error, Location, Result};
 pub use policy::{
     Duplicates, Limits, LinkPolicy, ModePolicy, Overwrite, Policy, SpecialFilesPolicy, WindowsNames,
 };
+pub use secret::Secret;
