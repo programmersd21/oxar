@@ -9,6 +9,7 @@
 
 pub mod budget;
 pub mod error;
+pub mod format;
 pub mod fsio;
 pub mod path;
 pub mod policy;
@@ -18,6 +19,10 @@ pub mod sink;
 
 pub use budget::{Budget, EntryScope};
 pub use error::{Error, Location, Result};
+pub use format::{
+    ArchiveReader, ArchiveWriter, Codec, Compression, Entry, EntryKind, Format, Method, NewEntry,
+    OtherKind,
+};
 pub use policy::{
     Duplicates, Limits, LinkPolicy, ModePolicy, Overwrite, Policy, SpecialFilesPolicy, WindowsNames,
 };
