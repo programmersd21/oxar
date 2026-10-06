@@ -8,6 +8,7 @@
 #![warn(missing_docs)]
 
 pub mod budget;
+pub mod codec;
 pub mod detect;
 pub mod error;
 pub mod format;
