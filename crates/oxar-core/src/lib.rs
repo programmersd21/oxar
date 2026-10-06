@@ -9,6 +9,7 @@
 
 pub mod budget;
 pub mod error;
+pub mod fsio;
 pub mod path;
 pub mod policy;
 pub mod secret;
