@@ -12,6 +12,7 @@ pub mod error;
 pub mod fsio;
 pub mod path;
 pub mod policy;
+pub mod progress;
 pub mod secret;
 pub mod sink;
 
@@ -20,5 +21,6 @@ pub use error::{Error, Location, Result};
 pub use policy::{
     Duplicates, Limits, LinkPolicy, ModePolicy, Overwrite, Policy, SpecialFilesPolicy, WindowsNames,
 };
+pub use progress::{CancelToken, NullProgress, ProgressEvent, ProgressKind, ProgressSink};
 pub use secret::Secret;
 pub use sink::{EntryExpect, FileAttrs, FsSink, PutOutcome, Sink, VirtualSink};
