@@ -8,6 +8,7 @@
 #![warn(missing_docs)]
 
 pub mod budget;
+pub mod detect;
 pub mod error;
 pub mod format;
 pub mod fsio;
