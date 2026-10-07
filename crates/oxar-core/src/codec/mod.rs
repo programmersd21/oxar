@@ -15,6 +15,8 @@ pub mod lz4;
 pub mod lzma;
 /// Snappy frame codec wrapper.
 pub mod snappy;
+/// Streaming encoder and decoder objects for every codec.
+pub mod stream;
 /// xz codec wrapper.
 pub mod xz;
 /// zlib codec wrapper.
