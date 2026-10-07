@@ -1,14 +1,20 @@
 //! Raw stream codecs. Each submodule wraps one third party codec and adds the
 //! policy limits that the container layers need.
 
+/// Brotli codec wrapper.
+pub mod brotli;
 /// bzip2 codec wrapper.
 pub mod bzip2;
 /// Raw deflate codec wrapper.
 pub mod deflate;
 /// gzip codec wrapper.
 pub mod gzip;
+/// LZ4 frame codec wrapper.
+pub mod lz4;
 /// LZMA / lzma-alone codec wrapper.
 pub mod lzma;
+/// Snappy frame codec wrapper.
+pub mod snappy;
 /// xz codec wrapper.
 pub mod xz;
 /// zlib codec wrapper.
@@ -145,6 +151,11 @@ pub fn compress(
         Codec::Xz => xz::compress(data, level, opts.extreme, threads),
         Codec::Lzma => lzma::compress(data, level, opts.extreme, threads),
         Codec::Zstd => zstd::compress(data, level, threads, opts.window_log, opts.long_distance),
+        Codec::Lz4 => lz4::compress(data, level),
+        Codec::Brotli => {
+            brotli::compress(data, level, if opts.lgwin > 0 { opts.lgwin } else { 22 })
+        }
+        Codec::Snappy => snappy::compress(data),
     }
 }
 
@@ -164,5 +175,8 @@ pub fn decompress(
         Codec::Xz => xz::decompress(data, limits, max_size),
         Codec::Lzma => lzma::decompress(data, limits, max_size),
         Codec::Zstd => zstd::decompress(data, limits, max_size),
+        Codec::Lz4 => lz4::decompress(data, limits, max_size),
+        Codec::Brotli => brotli::decompress(data, limits, max_size),
+        Codec::Snappy => snappy::decompress(data, limits, max_size),
     }
 }
