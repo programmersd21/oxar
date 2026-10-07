@@ -1,12 +1,20 @@
 //! Raw stream codecs. Each submodule wraps one third party codec and adds the
 //! policy limits that the container layers need.
 
+/// bzip2 codec wrapper.
+pub mod bzip2;
 /// Raw deflate codec wrapper.
 pub mod deflate;
 /// gzip codec wrapper.
 pub mod gzip;
+/// LZMA / lzma-alone codec wrapper.
+pub mod lzma;
+/// xz codec wrapper.
+pub mod xz;
 /// zlib codec wrapper.
 pub mod zlib;
+/// zstd codec wrapper.
+pub mod zstd;
 
 use std::io::Write;
 
@@ -133,6 +141,10 @@ pub fn compress(
         Codec::Gzip => gzip::compress(data, level, threads),
         Codec::Zlib => Ok(zlib::compress(data, level)),
         Codec::Deflate => Ok(deflate::compress(data, level)),
+        Codec::Bzip2 => Ok(bzip2::compress(data, level)),
+        Codec::Xz => xz::compress(data, level, opts.extreme, threads),
+        Codec::Lzma => lzma::compress(data, level, opts.extreme, threads),
+        Codec::Zstd => zstd::compress(data, level, threads, opts.window_log, opts.long_distance),
     }
 }
 
@@ -148,5 +160,9 @@ pub fn decompress(
         Codec::Gzip => gzip::decompress(data, limits, max_size),
         Codec::Zlib => zlib::decompress(data, limits, max_size),
         Codec::Deflate => deflate::decompress(data, limits, max_size),
+        Codec::Bzip2 => bzip2::decompress(data, limits, max_size),
+        Codec::Xz => xz::decompress(data, limits, max_size),
+        Codec::Lzma => lzma::decompress(data, limits, max_size),
+        Codec::Zstd => zstd::decompress(data, limits, max_size),
     }
 }
