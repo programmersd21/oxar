@@ -454,4 +454,6 @@ mod tests {
 
 pub mod zip;
 
+pub mod zip_validate;
+
 pub mod zip_reader;
