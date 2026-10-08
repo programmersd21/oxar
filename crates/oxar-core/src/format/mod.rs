@@ -452,3 +452,6 @@ mod tests {
     }
 }
 
+pub mod zip;
+
+pub mod zip_reader;
