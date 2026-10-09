@@ -452,6 +452,8 @@ mod tests {
     }
 }
 
+pub mod tar;
+
 pub mod zip;
 
 pub mod zip_validate;
