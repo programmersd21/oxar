@@ -11,6 +11,7 @@ pub mod budget;
 pub mod codec;
 pub mod detect;
 pub mod error;
+pub mod extract;
 pub mod format;
 pub mod fsio;
 pub mod path;
@@ -21,6 +22,7 @@ pub mod sink;
 
 pub use budget::{Budget, EntryScope};
 pub use error::{Error, Location, Result};
+pub use extract::{ExtractReport, NameRule, Skipped};
 pub use format::{
     ArchiveReader, ArchiveWriter, Codec, Compression, Entry, EntryKind, Format, Method, NewEntry,
     OtherKind,
