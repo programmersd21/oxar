@@ -34,3 +34,4 @@ pub use policy::{
 pub use progress::{CancelToken, NullProgress, ProgressEvent, ProgressKind, ProgressSink};
 pub use secret::Secret;
 pub use sink::{EntryExpect, FileAttrs, FsSink, PutOutcome, Sink, VirtualSink};
+pub mod test_archive;
