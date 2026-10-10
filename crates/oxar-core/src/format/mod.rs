@@ -456,6 +456,8 @@ pub mod tar;
 
 pub mod zip;
 
+pub mod sevenz;
+
 pub mod zip_validate;
 
 pub mod zip_reader;
