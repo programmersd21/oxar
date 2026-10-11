@@ -1,0 +1,82 @@
+[build-system]
+requires = ["maturin>=1.15,<2"]
+build-backend = "maturin"
+
+[project]
+name = "oxar"
+description = "Archive and compression library for Python with a Rust core: zip, tar and 7z plus ten raw codecs, one API, safe by default"
+readme = "readme.md"
+requires-python = ">=3.11"
+license = "MIT OR Apache-2.0"
+license-files = ["LICENSE-MIT", "LICENSE-APACHE"]
+authors = [{ name = "Soumalya Das" }]
+keywords = ["archive", "compression", "zip", "tar", "7z"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Rust",
+    "Topic :: System :: Archiving",
+    "Topic :: System :: Archiving :: Compression",
+    "Typing :: Typed",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/programmersd21/oxar"
+Repository = "https://github.com/programmersd21/oxar"
+Documentation = "https://github.com/programmersd21/oxar/blob/main/docs/api.md"
+Changelog = "https://github.com/programmersd21/oxar/blob/main/CHANGELOG.md"
+
+[project.scripts]
+oxar = "oxar._cli:main"
+
+[dependency-groups]
+dev = [
+    "maturin==1.15.0",
+    "cibuildwheel==4.3.1",
+    "pytest==9.1.1",
+    "hypothesis==6.170.1",
+    "mypy==2.4.0",
+    "ruff==0.17.1",
+    "pytest-benchmark==5.3.0",
+    "auditwheel==6.8.2",
+    "delocate==0.13.0",
+]
+
+[tool.maturin]
+module-name = "oxar._oxar"
+python-source = "python"
+manifest-path = "crates/oxar-py/Cargo.toml"
+features = ["pyo3/extension-module"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["spikes", "bench/results"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests/python"]
+markers = [
+    "slow: long running tests; excluded by default via -m 'not slow'",
+    "interop: needs third party command line tools",
+]
+
+[tool.mypy]
+strict = true
+python_version = "3.11"
+files = ["python/oxar", "tests/python"]
