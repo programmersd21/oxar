@@ -86,9 +86,12 @@ fn parse_codec(name: &str) -> PyResult<oxar_core::format::Codec> {
 }
 
 fn default_threads() -> u32 {
-    std::thread::available_parallelism()
-        .map(|count| u32::try_from(count.get().min(8)).unwrap_or(1))
-        .unwrap_or(1)
+    static CACHED: std::sync::OnceLock<u32> = std::sync::OnceLock::new();
+    *CACHED.get_or_init(|| {
+        std::thread::available_parallelism()
+            .map(|count| u32::try_from(count.get().min(8)).unwrap_or(1))
+            .unwrap_or(1)
+    })
 }
 
 fn policy_from_dict(options: Option<Bound<'_, PyDict>>) -> PyResult<RustPolicy> {
