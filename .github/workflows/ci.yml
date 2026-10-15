@@ -1,0 +1,81 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - run: cargo fmt --all --check
+      - run: cargo clippy --all-targets --all-features -- -D warnings
+      - run: RUSTDOCFLAGS="-D warnings" cargo doc --no-deps --workspace
+      - run: python3 tools/check_versions.py
+      - run: python3 tools/check_repository.py
+
+  test-rust:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - run: cargo test --workspace --all-features --lib --tests
+      - run: cargo test --workspace --all-features --doc
+
+  test-python:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.11", "3.12", "3.13", "3.14", "3.15", "3.14t"]
+        exclude:
+          - os: macos-latest
+            python: "3.14t"
+          - os: windows-latest
+            python: "3.14t"
+    runs-on: ${{ matrix.os }}
+    env:
+      PYTHON_GIL: ${{ endsWith(matrix.python, 't') && '0' || '1' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - run: uv venv --python ${{ matrix.python }}
+      - run: uv pip install . pytest hypothesis pytest-benchmark
+      - run: uv run python -m pytest tests/python -m "not slow"
+      - run: uv run python -c "import oxar; print(oxar.__version__)"
+      - name: free threading check
+        if: endsWith(matrix.python, 't')
+        run: uv run python -c "import sys, oxar, warnings; w = warnings.catch_warnings(record=True); import oxar._oxar; assert not any('GIL' in str(x.message) for x in w)"
+
+  interop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - run: sudo apt-get update && sudo apt-get install -y p7zip-full brotli lz4 zstd xz-utils bzip2 libarchive-tools
+      - run: uv venv --python 3.14
+      - run: uv pip install . pytest hypothesis py7zr
+      - run: uv run python -m pytest tests/python -m "interop and not slow"
+
+  supply-chain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - run: cargo install cargo-deny cargo-audit --locked
+      - run: cargo deny check
+      - run: cargo audit
