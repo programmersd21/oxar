@@ -1,0 +1,21 @@
+[workspace]
+
+[package]
+name = "oxar-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2024"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4.13"
+oxar-core = { path = ".." }
+
+[[bin]]
+name = "sanitize"
+path = "fuzz_targets/sanitize.rs"
+test = false
+doc = false
+bench = false
