@@ -1,0 +1,7 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc ef90835ca99bddd05a9365fbb42ed6fea40fcb4f4d118984e2fc0c0641c45ddb # shrinks to name = [1, 58], policy = Policy { symlinks: Contained, hardlinks: Contained, special_files: Reject, modes: Safe, allow_setid: false, overwrite: Error, duplicates: Auto, windows_names: Auto, preserve_mtime: false, cleanup_on_error: false, strict: false, allow_streaming_zip: false, follow_existing_symlinks: false, create_dest: false, durable: false, limits: Limits { max_entries: Some(1000000), max_entry_size: Some(8589934592), max_total_size: Some(34359738368), max_ratio: Some(1000), ratio_floor: 67108864, max_path_bytes: Some(4096), max_component_bytes: Some(255), max_depth: Some(1), max_decoder_memory: Some(536870912), max_pax_header_bytes: Some(1048576), max_extra_bytes: Some(65535), max_sparse_regions: Some(100000), max_solid_block_bytes: Some(1073741824) } }
