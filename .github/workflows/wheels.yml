@@ -23,6 +23,18 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - name: Setup sccache
+        uses: mozilla-actions/sccache-action@fc920bf0ec8de6ee65d409111f7ec508035751ba # v0.0.11
+      - name: Cache cibuildwheel tool cache
+        uses: actions/cache@d4323d4df104b026a6aa633fdb11d772146be0bf # v4.2.2
+        with:
+          path: |
+            ~/.cache/cibuildwheel
+            ~/AppData/Local/pypa/cibuildwheel/Cache
+            ~/Library/Caches/cibuildwheel
+          key: cibw-tools-${{ matrix.os }}-${{ hashFiles('Cargo.lock', 'pyproject.toml') }}
+          restore-keys: |
+            cibw-tools-${{ matrix.os }}-
       - uses: pypa/cibuildwheel@b3395e271a35f73dad77f21802abe9b986dfe299 # v4.3.1
         env:
           CIBW_BUILD: "cp311-* cp312-* cp313-*"
@@ -30,7 +42,9 @@ jobs:
           CIBW_BUILD_FRONTEND: "build"
           MACOSX_DEPLOYMENT_TARGET: "11.0"
           CIBW_TEST_COMMAND: "python -c \"import oxar; print('installed oxar', oxar.__version__)\""
-          CIBW_ENVIRONMENT: "RUST_BACKTRACE=1"
+          SCCACHE_GHA_ENABLED: "true"
+          RUSTC_WRAPPER: "sccache"
+          CIBW_ENVIRONMENT: "RUST_BACKTRACE=1 RUSTC_WRAPPER=sccache SCCACHE_GHA_ENABLED=true"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: wheels-${{ matrix.os }}
