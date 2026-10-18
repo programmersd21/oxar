@@ -58,7 +58,14 @@ jobs:
       - run: uv run python -c "import oxar; print(oxar.__version__)"
       - name: free threading check
         if: endsWith(matrix.python, 't')
-        run: uv run python -c "import warnings; seen = []; warnings.showwarning = lambda message, *args, **kwargs: seen.append(message); import oxar, oxar._oxar; assert not any('GIL' in str(m) for m in seen), seen"
+        run: |
+          uv run python -c "
+          import warnings
+          seen = []
+          warnings.showwarning = lambda message, *args, **kwargs: seen.append(message)
+          import oxar, oxar._oxar
+          assert not any('GIL' in str(m) for m in seen), seen
+          "
 
   interop:
     runs-on: ubuntu-latest
