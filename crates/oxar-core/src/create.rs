@@ -128,9 +128,16 @@ pub fn discover(root: &Path, follow_symlinks: bool) -> Result<Vec<Discovered>> {
     Ok(found)
 }
 
+#[cfg(unix)]
 fn mode_from_md(md: &std::fs::Metadata) -> u32 {
     use std::os::unix::fs::PermissionsExt;
     md.permissions().mode()
+}
+
+#[cfg(not(unix))]
+fn mode_from_md(md: &std::fs::Metadata) -> u32 {
+    // Windows has no Unix mode bits; report conventional defaults.
+    if md.is_dir() { 0o755 } else { 0o644 }
 }
 
 /// Convert discovered items to NewEntry descriptions. File contents are read

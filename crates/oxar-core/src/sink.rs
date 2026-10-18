@@ -11,7 +11,9 @@ use std::sync::{Arc, Mutex};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use cap_std::ambient_authority;
-use cap_std::fs::{Dir, OpenOptions, Permissions, PermissionsExt};
+use cap_std::fs::{Dir, OpenOptions};
+#[cfg(unix)]
+use cap_std::fs::{Permissions, PermissionsExt};
 
 use crate::budget::EntryScope;
 use crate::error::{Error, Location, Result};
@@ -23,6 +25,17 @@ use crate::policy::{ModePolicy, Overwrite, Policy};
 use std::os::fd::AsFd;
 #[cfg(windows)]
 use std::os::windows::io::AsHandle;
+
+#[cfg(unix)]
+fn apply_mode(root: &Dir, path: &Path, mode: u32) -> io::Result<()> {
+    root.set_permissions(path, Permissions::from_mode(mode))
+}
+
+#[cfg(not(unix))]
+fn apply_mode(_root: &Dir, _path: &Path, _mode: u32) -> io::Result<()> {
+    // Non-Unix platforms have no permission bits beyond the readonly flag.
+    Ok(())
+}
 
 /// Attributes carried from an entry to the filesystem.
 #[derive(Debug, Clone, Default)]
@@ -362,12 +375,10 @@ impl FsSink {
                         source: error,
                         loc: Location::new(),
                     })?;
-                    self.root
-                        .set_permissions(&parent, Permissions::from_mode(0o700))
-                        .map_err(|error| Error::Io {
-                            source: error,
-                            loc: Location::new(),
-                        })?;
+                    apply_mode(&self.root, &parent, 0o700).map_err(|error| Error::Io {
+                        source: error,
+                        loc: Location::new(),
+                    })?;
                     let mut state = self.lock()?;
                     state.created.push(CreatedKind::Dir(parent.clone()));
                     let depth = parent.components().count();
@@ -485,12 +496,10 @@ impl FsSink {
                 _ => mode,
             };
             if let Some(mode) = final_mode {
-                self.root
-                    .set_permissions(&temp_rel, Permissions::from_mode(mode))
-                    .map_err(|error| Error::Io {
-                        source: error,
-                        loc: Location::new(),
-                    })?;
+                apply_mode(&self.root, &temp_rel, mode).map_err(|error| Error::Io {
+                    source: error,
+                    loc: Location::new(),
+                })?;
             }
             let std_file = file.into_std();
             if self.policy.preserve_mtime
@@ -556,12 +565,10 @@ impl FsSink {
                     source: error,
                     loc: Location::new(),
                 })?;
-                self.root
-                    .set_permissions(&rel, Permissions::from_mode(0o700))
-                    .map_err(|error| Error::Io {
-                        source: error,
-                        loc: Location::new(),
-                    })?;
+                apply_mode(&self.root, &rel, 0o700).map_err(|error| Error::Io {
+                    source: error,
+                    loc: Location::new(),
+                })?;
                 let mut state = self.lock()?;
                 state.created.push(CreatedKind::Dir(rel.clone()));
             }
@@ -766,9 +773,7 @@ impl FsSink {
         let mut warnings = Vec::new();
         for pending in sorted {
             if let Some(mode) = pending.mode
-                && let Err(error) = self
-                    .root
-                    .set_permissions(&pending.path, Permissions::from_mode(mode))
+                && let Err(error) = apply_mode(&self.root, &pending.path, mode)
             {
                 warnings.push(format!(
                     "could not apply mode to {}: {error}",

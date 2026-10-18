@@ -80,15 +80,18 @@ impl SafePath {
     pub fn to_path_buf(&self) -> Result<PathBuf> {
         let mut path = PathBuf::new();
         for component in &self.components {
-            if cfg!(windows) {
+            #[cfg(unix)]
+            {
+                use std::os::unix::ffi::OsStrExt;
+                path.push(std::ffi::OsStr::from_bytes(component));
+            }
+            #[cfg(not(unix))]
+            {
                 let text = std::str::from_utf8(component).map_err(|_| Error::UnsafePath {
                     detail: "name is not valid UTF-8 and cannot be represented on Windows".into(),
                     loc: Location::new(),
                 })?;
                 path.push(text);
-            } else {
-                use std::os::unix::ffi::OsStrExt;
-                path.push(std::ffi::OsStr::from_bytes(component));
             }
         }
         Ok(path)
