@@ -6,7 +6,7 @@
 
 [![build](https://img.shields.io/github/actions/workflow/status/programmersd21/oxar/ci.yml?style=flat-square&logo=github&label=build&color=415a77)](https://github.com/programmersd21/oxar/actions/workflows/ci.yml)
 [![wheels](https://img.shields.io/github/actions/workflow/status/programmersd21/oxar/wheels.yml?style=flat-square&logo=wheel&label=wheels&color=778da9)](https://github.com/programmersd21/oxar/actions/workflows/wheels.yml)
-[![python](https://img.shields.io/badge/python-3.11+-e0a96d?style=flat-square&logo=python&logoColor=000000)](https://python.org)
+[![python](https://img.shields.io/badge/python-3.11+-e0a96d?style=flat-square&logo=python&logoColor=FFFFFF)](https://python.org)
 [![rust](https://img.shields.io/badge/rust-%23![forbid(unsafe__code)]-c35832?style=flat-square&logo=rust&logoColor=ffffff)](https://www.rust-lang.org)
 [![license](https://img.shields.io/badge/license-mit%20/%20apache--2.0-2a9d8f?style=flat-square)](LICENSE-MIT)
 
