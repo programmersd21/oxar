@@ -3,6 +3,16 @@
 all notable changes to this project are documented here. the format follows
 keep a changelog.
 
+## [0.1.1] - 2026-10-18
+
+### fixed
+
+- windows builds: unix only permission and path helpers are behind cfg gates,
+  so oxar-core and the bindings compile on windows again.
+- tar interop and write tests generate their fixtures with the platform tar
+  instead of reading files outside the repository.
+- ci free threading check records import warnings reliably.
+
 ## [0.1.0] - 2026-10-18
 
 ### added

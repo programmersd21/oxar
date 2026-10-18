@@ -75,7 +75,7 @@ from ._oxar import (
 CodecEncoder = _CodecEncoder
 CodecDecoder = _CodecDecoder
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 PathLike = str | os.PathLike[str]
 Source = PathLike | BinaryIO
 Sink = PathLike | BinaryIO
