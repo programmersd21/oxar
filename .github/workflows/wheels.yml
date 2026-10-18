@@ -17,6 +17,9 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - name: Set up QEMU
+        if: runner.os == 'Linux'
+        uses: docker/setup-qemu-action@96fe6ef7f33517b61c61be40b68a1882f3264fb8 # v4.2.0
       - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
       - uses: pypa/cibuildwheel@b3395e271a35f73dad77f21802abe9b986dfe299 # v4.3.1
         env:
@@ -28,7 +31,7 @@ jobs:
           CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
           CIBW_MUSLLINUX_X86_64_IMAGE: musllinux_1_2
           CIBW_MUSLLINUX_AARCH64_IMAGE: musllinux_1_2
-          CIBW_BUILD_FRONTEND: "build[uv]"
+          CIBW_BUILD_FRONTEND: "build"
           MACOSX_DEPLOYMENT_TARGET: "11.0"
           CIBW_TEST_COMMAND: "python -m pytest {project}/tests/python -m 'not slow and not interop' -q"
           CIBW_TEST_REQUIRES: "pytest"

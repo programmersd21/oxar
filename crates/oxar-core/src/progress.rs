@@ -118,7 +118,16 @@ mod tests {
     fn cancel_is_visible_across_threads() {
         let token = CancelToken::new();
         let other = token.clone();
-        let handle = std::thread::spawn(move || other.is_cancelled());
+        let handle = std::thread::spawn(move || {
+            let start = std::time::Instant::now();
+            while !other.is_cancelled() {
+                if start.elapsed() > std::time::Duration::from_secs(5) {
+                    return false;
+                }
+                std::thread::yield_now();
+            }
+            true
+        });
         token.cancel();
         assert!(handle.join().unwrap());
         assert!(token.is_cancelled());
