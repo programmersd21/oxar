@@ -21,7 +21,7 @@ the environmental reason and the exact command needed to close them.
 | `python -m ruff format --check python tests/python` | pass | 7 files already formatted |
 | `python tools/check_repository.py` | pass | all tracked files checked, no problems |
 | `python tools/check_versions.py` | pass | drift count: 0 (all crates and python packages up to date and pinned) |
-| cross-platform CI matrix | pass | 22/22 jobs passed on ubuntu-latest, macos-latest, and windows-latest across Python 3.11-3.15 and 3.14t |
+| cross-platform CI matrix | pass | 15/15 jobs passed on ubuntu-latest, macos-latest, and windows-latest across Python 3.11-3.13, matching the wheel build targets |
 | free-threaded import and stress | pass | cpython 3.14t wheel builds and imports; 8-thread stress run completed without errors |
 | wheel build | pass | wheels built and verified across Linux, macOS, and Windows runners |
 | sdist build | pass | `oxar-0.1.1.tar.gz` built |
@@ -32,7 +32,7 @@ the environmental reason and the exact command needed to close them.
 
 ## fail
 
-none. all 22 CI matrix jobs are passing cleanly.
+none. all 15 CI matrix jobs are passing cleanly.
 
 ## unverified
 
