@@ -42,6 +42,7 @@ fn fs_sink_round_trips_a_file() {
     assert_eq!(fs::read(dest.join("a").join("b.txt")).unwrap(), b"hello");
 }
 
+#[cfg(unix)]
 #[test]
 fn fs_sink_blocks_symlink_prefix() {
     let dir = tempfile::tempdir().unwrap();
@@ -50,11 +51,7 @@ fn fs_sink_blocks_symlink_prefix() {
     let outside = dir.path().join("outside");
     fs::create_dir_all(&outside).unwrap();
     fs::write(outside.join("secret"), b"do-not-touch").unwrap();
-    #[cfg(unix)]
-    {
-        use std::os::unix::fs::symlink;
-        symlink(&outside, dest.join("evil")).unwrap();
-    }
+    std::os::unix::fs::symlink(&outside, dest.join("evil")).unwrap();
     let sink = FsSink::new(&dest, Arc::new(Policy::default())).unwrap();
     let p = make_safe(b"evil/x");
     let mut data = std::io::Cursor::new(b"payload".to_vec());
