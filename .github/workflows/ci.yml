@@ -2,7 +2,22 @@ name: ci
 on:
   push:
     branches: [main]
+    paths: &code_paths
+      - "crates/**"
+      - "python/**"
+      - "tests/**"
+      - "tools/**"
+      - "bench/**"
+      - "examples/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "pyproject.toml"
+      - "rust-toolchain.toml"
+      - "deny.toml"
+      - ".cargo/**"
+      - ".github/workflows/ci.yml"
   pull_request:
+    paths: *code_paths
 
 permissions:
   contents: read
