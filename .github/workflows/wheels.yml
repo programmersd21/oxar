@@ -37,7 +37,7 @@ jobs:
             cibw-tools-${{ matrix.os }}-
       - uses: pypa/cibuildwheel@b3395e271a35f73dad77f21802abe9b986dfe299 # v4.3.1
         env:
-          CIBW_BUILD: "cp311-* cp312-* cp313-*"
+          CIBW_BUILD: "cp311-* cp312-* cp313-*" # keep in sync with the test-python matrix in ci.yml
           CIBW_ARCHS: ${{ matrix.arch }}
           CIBW_BUILD_FRONTEND: "build"
           MACOSX_DEPLOYMENT_TARGET: "11.0"
