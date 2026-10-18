@@ -58,6 +58,7 @@ fn gnu_tar_reads_what_we_write() {
     let listing = String::from_utf8_lossy(&status.stdout);
     assert!(listing.contains("plain.txt"), "{listing}");
     assert!(listing.contains("name.txt"), "{listing}");
+    #[cfg(not(windows))]
     assert!(listing.contains("日本語.txt"), "{listing}");
     let extract_dir = dir.path().join("out");
     std::fs::create_dir(&extract_dir).unwrap();
