@@ -5,13 +5,17 @@ fn reads_sevenz_from_7z_binary() {
     let out = d.path().join("x.7z");
     std::fs::write(d.path().join("a.txt"), b"hello").unwrap();
     let r = std::process::Command::new("7z")
-        .args([
-            "a",
-            out.to_str().unwrap(),
-            d.path().join("a.txt").to_str().unwrap(),
-        ])
-        .output()
-        .unwrap();
+        .arg("a")
+        .arg(&out)
+        .arg(d.path().join("a.txt"))
+        .output();
+    let r = match r {
+        Ok(r) => r,
+        Err(_) => {
+            eprintln!("skipping: 7z is not available");
+            return;
+        }
+    };
     assert!(r.status.success(), "{}", String::from_utf8_lossy(&r.stderr));
     let names = sevenz::list_sevenz(&out, None).unwrap();
     assert!(names.iter().any(|n| n.contains("a.txt")), "{names:?}");
@@ -38,10 +42,14 @@ fn sevenz_roundtrip_geo() {
     )];
     let f = sevenz::create_sevenz(std::fs::File::create(&out).unwrap(), &items, None).unwrap();
     drop(f);
-    let status = std::process::Command::new("7z")
-        .args(["t", out.to_str().unwrap()])
-        .output()
-        .unwrap();
+    let status = std::process::Command::new("7z").arg("t").arg(&out).output();
+    let status = match status {
+        Ok(status) => status,
+        Err(_) => {
+            eprintln!("skipping: 7z is not available");
+            return;
+        }
+    };
     assert!(
         status.status.success(),
         "7z t failed: {}",

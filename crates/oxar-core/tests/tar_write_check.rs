@@ -36,11 +36,20 @@ fn gnu_tar_reads_what_we_write() {
         .add(&entry(unicode, EntryKind::File, Some(15)), &mut reader)
         .unwrap();
     writer.finish().unwrap();
-    std::fs::write("/tmp/oxar_written.tar", &out).unwrap();
-    let status = std::process::Command::new("tar")
-        .args(["-tf", "/tmp/oxar_written.tar"])
+    let dir = tempfile::tempdir().unwrap();
+    let archive = dir.path().join("written.tar");
+    std::fs::write(&archive, &out).unwrap();
+    let status = match std::process::Command::new("tar")
+        .arg("-tf")
+        .arg(&archive)
         .output()
-        .unwrap();
+    {
+        Ok(status) => status,
+        Err(_) => {
+            eprintln!("skipping: system tar is not available");
+            return;
+        }
+    };
     assert!(
         status.status.success(),
         "tar -tf failed: {}",
@@ -50,8 +59,13 @@ fn gnu_tar_reads_what_we_write() {
     assert!(listing.contains("plain.txt"), "{listing}");
     assert!(listing.contains("name.txt"), "{listing}");
     assert!(listing.contains("日本語.txt"), "{listing}");
+    let extract_dir = dir.path().join("out");
+    std::fs::create_dir(&extract_dir).unwrap();
     let extract = std::process::Command::new("tar")
-        .args(["-xf", "/tmp/oxar_written.tar", "-C", "/tmp/opencode/verify"])
+        .arg("-xf")
+        .arg(&archive)
+        .arg("-C")
+        .arg(&extract_dir)
         .output()
         .unwrap();
     assert!(extract.status.success());
