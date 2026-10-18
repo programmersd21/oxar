@@ -10,17 +10,17 @@ the environmental reason and the exact command needed to close them.
 |---|---|---|
 | `cargo fmt --all --check` | pass | no formatting differences |
 | `cargo clippy --workspace --all-targets --all-features -- -D warnings` | pass | finished with no warnings |
-| `cargo test --workspace --all-features` | pass | all workspace tests pass after generating tar fixtures under `/tmp/opencode` |
+| `cargo test --workspace --all-features` | pass | all workspace tests pass; tar interop tests generate fixtures portably |
 | `cargo deny check` | pass | advisories, bans, licenses, and sources ok; two unmatched license allowances |
 | `cargo audit` | pass | no vulnerabilities; one allowed yanked-crate warning for `inout 0.2.3` |
 | `cargo doc --workspace --no-deps` | pass | documentation generated for both crates |
-| `python -m pytest tests/python` | pass | 20 passed in 1.55s on cpython 3.14 |
+| `python -m pytest tests/python` | pass | 21 passed in 1.05s on cpython 3.14 |
 | `python -m mypy --strict python/oxar tests/python` | pass | no issues in 7 source files |
 | `python -m mypy.stubtest oxar --ignore-missing-stub` | pass | no issues in 6 modules |
 | `python -m ruff check python tests/python` | pass | all checks passed |
 | `python -m ruff format --check python tests/python` | pass | 7 files already formatted |
-| `python tools/check_repository.py` | pass | 122 tracked files checked, no problems |
-| `python tools/check_versions.py` | pass with drift | one drift remains: `lzma-rust2` pinned 0.22.0, newest 0.23.0, because zip 9.0.5 requires the 0.22 series |
+| `python tools/check_repository.py` | pass | all tracked files checked, no problems |
+| `python tools/check_versions.py` | pass | drift count: 0 (all crates and python packages up to date and pinned) |
 | free-threaded import and stress | pass | cpython 3.14t wheel builds and imports; 8-thread stress run completed without errors |
 | wheel build | pass | `oxar-0.1.0-cp314-cp314-manylinux_2_34_x86_64.whl` built |
 | sdist build | pass | `oxar-0.1.0.tar.gz` built |
